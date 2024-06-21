@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  de-pg-cr-af:
+    image: cr.yandex/crp1r8pht0n0gl25aug1/de-pg-cr-af:latest
+    ports:
+      - 8000:3000
+      - 8002:3002
+      - 6432:5432
+    volumes:
+      - s5t4postgresql:/var/lib/postgresql
+      - ${AIRFLOW_DAGS_DIR:-./scr/dags}:/lessons/dags
+    environment:
+      AIRFLOW_VAR_EXAMPLE_STG_DDL_FILES_PATH: "/lessons/dags/examples/stg/init_schema_dag/ddl"
+    restart: unless-stopped
+
+  metabase:
+    image: metabase/metabase
+    ports:
+      - 8888:3000
+    restart: unless-stopped
+
+volumes:
+  s5t4postgresql:
